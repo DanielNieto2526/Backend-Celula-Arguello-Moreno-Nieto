@@ -8,9 +8,9 @@ const PUERTO = process.env.PORT || 3000;
 async function iniciarServidor() {
     await conectarDB();
     app.listen(PUERTO, () => {
-        console.log(`🚀 ConectaTutor API escuchando en http://localhost:${PUERTO}`);
-        console.log(`📚 Documentación OpenAPI / Swagger en http://localhost:${PUERTO}/api-docs`);
-        console.log(`🩺 Salud de la API en http://localhost:${PUERTO}/api/salud`);
+        console.log(`[Servidor] ConectaTutor API escuchando en http://localhost:${PUERTO}`);
+        console.log(`[Documentacion] OpenAPI / Swagger en http://localhost:${PUERTO}/api-docs`);
+        console.log(`[Salud] Estado del servicio en http://localhost:${PUERTO}/api/salud`);
     });
 }
 

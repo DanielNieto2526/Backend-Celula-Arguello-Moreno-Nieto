@@ -5,6 +5,8 @@ const authRouter = require('./routes/auth.routes');
 const tutoresRouter = require('./routes/tutores.routes');
 const tutoriasRouter = require('./routes/tutorias.routes');
 const usuariosRouter = require('./routes/usuarios.routes');
+const adminRouter = require('./routes/admin.routes');
+const resenasRouter = require('./routes/resenas.routes');
 const { rutaNoEncontrada, manejarErrores } = require('./middlewares/manejarErrores');
 
 const app = express();
@@ -44,6 +46,8 @@ app.use('/api/auth', authRouter);
 app.use('/api/tutores', tutoresRouter);
 app.use('/api/tutorias', tutoriasRouter);
 app.use('/api/usuarios', usuariosRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/resenas', resenasRouter);
 
 // 6. Manejo de rutas inexistentes (404)
 app.use(rutaNoEncontrada);

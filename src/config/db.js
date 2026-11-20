@@ -1,5 +1,19 @@
+const dns = require('node:dns');
 const mongoose = require('mongoose');
-const { USUARIOS_INICIALES, TUTORES_INICIALES, TUTORIAS_INICIALES } = require('../utils/seedData');
+
+// Solucion para error querySrv ECONNREFUSED en Windows/Node con DNS de proveedores locales
+try {
+    dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch {
+    // Continuar si no se permite modificar servidores DNS
+}
+
+const {
+    USUARIOS_INICIALES,
+    TUTORES_INICIALES,
+    TUTORIAS_INICIALES,
+    RESENAS_INICIALES
+} = require('../utils/seedData');
 
 let isConnected = false;
 
@@ -8,12 +22,13 @@ async function conectarDB() {
     const dbName = process.env.DB_NAME || 'conectatutor_db';
 
     if (!uri || uri.trim() === '') {
-        console.warn('⚠️ [MongoDB] Advertencia: MONGO_URI no está configurada en el archivo .env. La API operará con datos en memoria.');
+        console.warn('[MongoDB] Advertencia: MONGO_URI no esta configurada en el archivo .env. La API operara con datos en memoria.');
         return false;
     }
 
     if (uri.includes('<db_username>') || uri.includes('<db_password>')) {
-        console.warn('⚠️ [MongoDB] Recuerda reemplazar <db_username> y <db_password> en el archivo .env con tus credenciales de MongoDB Atlas. Operando en memoria.');
+        console.warn('[MongoDB] Recuerda reemplazar <db_password> en el archivo .env con la contrasena de tu usuario en MongoDB Atlas.');
+        console.warn('[MongoDB] La API operara con datos en memoria hasta que agregues tu contrasena en .env.');
         return false;
     }
 
@@ -22,14 +37,17 @@ async function conectarDB() {
             dbName: dbName
         });
         isConnected = true;
-        console.log(`✅ Conectado exitosamente a MongoDB Atlas (Base de datos: ${dbName})`);
+        console.log(`[MongoDB] Conectado exitosamente a MongoDB Atlas (Base de datos: ${dbName})`);
 
-        // Sembrar datos iniciales si la base de datos está vacía
+        // Sembrar datos iniciales si la base de datos esta vacia
         await sembrarDatosIniciales();
         return true;
     } catch (error) {
-        console.error('❌ Error al conectar a MongoDB Atlas:', error.message);
-        console.warn('⚠️ La API continuará funcionando con el almacén en memoria para demostración.');
+        console.error('[MongoDB] Error al conectar a MongoDB Atlas:', error.message);
+        if (error.message.includes('bad auth') || error.message.includes('Authentication failed')) {
+            console.error('[MongoDB] Nota: La contrasena en el archivo .env no es correcta. Asegurate de colocar la misma contrasena con la que te conectaste en MongoDB Compass. Si contiene caracteres especiales, deben estar codificados en URL (ej: @ -> %40).');
+        }
+        console.warn('[MongoDB] La API continuara funcionando con el almacen en memoria.');
         return false;
     }
 }
@@ -39,26 +57,33 @@ async function sembrarDatosIniciales() {
         const Usuario = require('../models/usuario.model');
         const Tutor = require('../models/tutor.model');
         const Tutoria = require('../models/tutoria.model');
+        const Resena = require('../models/resena.model');
 
         const conteoUsuarios = await Usuario.countDocuments();
         if (conteoUsuarios === 0) {
             await Usuario.insertMany(USUARIOS_INICIALES);
-            console.log('🌱 [Seed] Usuarios iniciales sembrados en MongoDB.');
+            console.log('[Seed] Usuarios iniciales sembrados en MongoDB.');
         }
 
         const conteoTutores = await Tutor.countDocuments();
         if (conteoTutores === 0) {
             await Tutor.insertMany(TUTORES_INICIALES);
-            console.log('🌱 [Seed] Tutores iniciales sembrados en MongoDB.');
+            console.log('[Seed] Tutores iniciales sembrados en MongoDB.');
         }
 
         const conteoTutorias = await Tutoria.countDocuments();
         if (conteoTutorias === 0) {
             await Tutoria.insertMany(TUTORIAS_INICIALES);
-            console.log('🌱 [Seed] Tutorías iniciales sembradas en MongoDB.');
+            console.log('[Seed] Tutorias iniciales sembradas en MongoDB.');
+        }
+
+        const conteoResenas = await Resena.countDocuments();
+        if (conteoResenas === 0) {
+            await Resena.insertMany(RESENAS_INICIALES);
+            console.log('[Seed] Resenas iniciales sembradas en MongoDB.');
         }
     } catch (e) {
-        console.warn('⚠️ No se pudieron sembrar los datos iniciales en MongoDB:', e.message);
+        console.warn('[Seed] No se pudieron sembrar los datos iniciales en MongoDB:', e.message);
     }
 }
 

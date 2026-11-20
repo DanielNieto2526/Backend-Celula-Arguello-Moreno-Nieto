@@ -80,6 +80,39 @@ const usuarioSchema = new mongoose.Schema(
         diasDisponibles: {
             type: [String],
             default: []
+        },
+        estadoAprobacion: {
+            type: String,
+            enum: ['pendiente', 'aprobado', 'rechazado'],
+            default: 'aprobado'
+        },
+        activo: {
+            type: Boolean,
+            default: true
+        },
+        notaMateria: {
+            type: Number,
+            default: 4.8
+        },
+        promedioAcumulado: {
+            type: Number,
+            default: 4.3
+        },
+        soporteNotasNombre: {
+            type: String,
+            default: ''
+        },
+        soporteNotasUrl: {
+            type: String,
+            default: ''
+        },
+        motivoRechazo: {
+            type: String,
+            default: ''
+        },
+        fechaRegistro: {
+            type: String,
+            default: () => new Date().toLocaleDateString('es-CO')
         }
     },
     {

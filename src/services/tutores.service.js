@@ -42,6 +42,9 @@ async function listarTutores(filtros = {}) {
         if (filtros.activo !== undefined) {
             query.activo = filtros.activo === 'true' || filtros.activo === true;
         }
+        if (filtros.estadoAprobacion) {
+            query.estadoAprobacion = filtros.estadoAprobacion;
+        }
         lista = await Tutor.find(query);
     } else {
         lista = [...tutoresEnMemoria];
@@ -60,6 +63,9 @@ async function listarTutores(filtros = {}) {
         if (filtros.activo !== undefined) {
             const act = filtros.activo === 'true' || filtros.activo === true;
             lista = lista.filter((t) => t.activo === act);
+        }
+        if (filtros.estadoAprobacion) {
+            lista = lista.filter((t) => t.estadoAprobacion === filtros.estadoAprobacion);
         }
     }
     return lista;
@@ -90,7 +96,7 @@ async function registrarNuevoTutor(datos) {
     }
 
     const idTutor = `tutor-${Date.now()}`;
-    const idUsuario = `user-tutor-${Date.now()}`;
+    const idUsuario = idTutor;
     const iniciales = `${(datos.nombres || '').charAt(0)}${(datos.apellidos || '').charAt(0)}`.toUpperCase();
     const semestreTexto = `${datos.semestre || 6}º semestre ${datos.carrera || 'MACC'} - ${(datos.sede || 'Claustro').toLowerCase()}`;
     const precio = Number(datos.precioHora) || 20000;
@@ -118,7 +124,13 @@ async function registrarNuevoTutor(datos) {
         diasDisponibles: generarDiasDisponibles(datos.diasDisponibles),
         cursos,
         correo,
-        activo: true
+        activo: false, // Inicia inactivo hasta revisión de notas por admin
+        estadoAprobacion: 'pendiente',
+        notaMateria: Number(datos.notaMateria) || 4.5,
+        promedioAcumulado: Number(datos.promedioAcumulado) || 4.2,
+        soporteNotasNombre: datos.soporteNotasNombre || 'certificado_notas.pdf',
+        soporteNotasUrl: datos.soporteNotasUrl || '',
+        fechaRegistro: new Date().toLocaleDateString('es-CO')
     };
 
     const nuevoUsuarioData = {
@@ -137,7 +149,14 @@ async function registrarNuevoTutor(datos) {
         precioHora: precio,
         descripcion: datos.descripcion,
         materiaPrincipal: datos.materiaPrincipal,
-        diasDisponibles: datos.diasDisponibles || ['LU', 'MA', 'MI']
+        diasDisponibles: datos.diasDisponibles || ['LU', 'MA', 'MI'],
+        activo: false,
+        estadoAprobacion: 'pendiente',
+        notaMateria: Number(datos.notaMateria) || 4.5,
+        promedioAcumulado: Number(datos.promedioAcumulado) || 4.2,
+        soporteNotasNombre: datos.soporteNotasNombre || 'certificado_notas.pdf',
+        soporteNotasUrl: datos.soporteNotasUrl || '',
+        fechaRegistro: new Date().toLocaleDateString('es-CO')
     };
 
     const usuarioCreado = await usuariosService.crearUsuario(nuevoUsuarioData);

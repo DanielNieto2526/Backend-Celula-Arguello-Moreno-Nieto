@@ -7,8 +7,9 @@ const openapi = {
     openapi: '3.0.3',
     info: {
         title: 'ConectaTutor API - Universidad del Rosario',
-        description: 'API RESTful para la plataforma de tutorías ConectaTutor. Soporta autenticación, gestión de tutores, agendamiento de tutorías y calificaciones.',
-        version: '1.0.0',
+        description:
+            'API RESTful completa para la plataforma de tutorías ConectaTutor. Cubre autenticación institucional, catálogo y registro de tutores, agendamiento de sesiones presenciales y virtuales, calificaciones y feedback (Figma), gestión de perfiles y panel de administración con verificación de certificados de notas.',
+        version: '1.1.0',
         contact: {
             name: 'Célula de Desarrollo: Geronimo Arguello, Daniel Moreno, Daniel Nieto'
         }
@@ -25,9 +26,7 @@ const openapi = {
                 summary: 'Estado de salud de la API',
                 tags: ['Salud'],
                 responses: {
-                    200: {
-                        description: 'API en funcionamiento correcto'
-                    }
+                    200: { description: 'API en funcionamiento correcto' }
                 }
             }
         },
@@ -85,12 +84,13 @@ const openapi = {
         },
         '/tutores': {
             get: {
-                summary: 'Listar tutores disponibles',
+                summary: 'Listar tutores disponibles en el catálogo',
                 tags: ['Tutores'],
                 parameters: [
                     { name: 'materia', in: 'query', schema: { type: 'string' }, description: 'Filtrar por materia' },
                     { name: 'sede', in: 'query', schema: { type: 'string' }, description: 'Filtrar por sede' },
-                    { name: 'modalidad', in: 'query', schema: { type: 'string' }, description: 'Filtrar por modalidad' }
+                    { name: 'modalidad', in: 'query', schema: { type: 'string' }, description: 'Filtrar por modalidad' },
+                    { name: 'activo', in: 'query', schema: { type: 'boolean' }, description: 'Filtrar por activo' }
                 ],
                 responses: {
                     200: { description: 'Listado de tutores obtenido exitosamente' }
@@ -99,7 +99,7 @@ const openapi = {
         },
         '/tutores/registro': {
             post: {
-                summary: 'Registrar nuevo tutor con disponibilidad y perfil',
+                summary: 'Registrar nuevo tutor con soporte de notas para revisión administrativa',
                 tags: ['Tutores'],
                 requestBody: {
                     required: true,
@@ -107,7 +107,7 @@ const openapi = {
                         'application/json': {
                             schema: {
                                 type: 'object',
-                                required: ['nombres', 'apellidos', 'correo', 'carrera', 'precioHora'],
+                                required: ['nombres', 'apellidos', 'correo', 'carrera', 'precioHora', 'notaMateria'],
                                 properties: {
                                     nombres: { type: 'string', example: 'Daniel' },
                                     apellidos: { type: 'string', example: 'Nieto' },
@@ -117,6 +117,9 @@ const openapi = {
                                     sede: { type: 'string', example: 'Claustro' },
                                     modalidad: { type: 'string', example: 'Híbrida' },
                                     materiaPrincipal: { type: 'string', example: 'Cálculo II' },
+                                    notaMateria: { type: 'number', example: 4.8 },
+                                    promedioAcumulado: { type: 'number', example: 4.3 },
+                                    soporteNotasNombre: { type: 'string', example: 'certificado_notas.pdf' },
                                     precioHora: { type: 'number', example: 20000 },
                                     descripcion: { type: 'string' }
                                 }
@@ -125,7 +128,7 @@ const openapi = {
                     }
                 },
                 responses: {
-                    201: { description: 'Tutor registrado exitosamente' }
+                    201: { description: 'Tutor registrado y solicitud creada exitosamente' }
                 }
             }
         },
@@ -142,7 +145,7 @@ const openapi = {
                 }
             },
             patch: {
-                summary: 'Actualizar perfil de tutor',
+                summary: 'Actualizar perfil de tutor (descripción, precio, cursos)',
                 tags: ['Tutores'],
                 parameters: [
                     { name: 'id', in: 'path', required: true, schema: { type: 'string' } }
@@ -201,7 +204,7 @@ const openapi = {
                                 type: 'object',
                                 required: ['tutorId', 'diaSemana', 'franjaTexto'],
                                 properties: {
-                                    tutorId: { type: 'string', example: 'tutor-1' },
+                                    tutorId: { type: 'string', example: 'tutor-jc' },
                                     diaNumero: { type: 'number', example: 3 },
                                     diaSemana: { type: 'string', example: 'MIE' },
                                     franjaTexto: { type: 'string', example: '2:00 - 3:00 PM' },
@@ -321,7 +324,7 @@ const openapi = {
                                 required: ['calificacion'],
                                 properties: {
                                     calificacion: { type: 'number', minimum: 1, maximum: 5, example: 5 },
-                                    comentarios: { type: 'string', example: 'Excelente explicación' }
+                                    comentarios: { type: 'string', example: 'Excelente explicación y paciencia' }
                                 }
                             }
                         }
@@ -329,6 +332,160 @@ const openapi = {
                 },
                 responses: {
                     204: { description: 'Calificación registrada exitosamente' }
+                }
+            }
+        },
+        '/resenas': {
+            get: {
+                summary: 'Listar todas las reseñas de tutorías',
+                tags: ['Reseñas'],
+                responses: {
+                    200: { description: 'Listado de reseñas' }
+                }
+            },
+            post: {
+                summary: 'Crear nueva reseña de tutoría con las 4 preguntas de feedback',
+                tags: ['Reseñas'],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['tutorId', 'autor', 'calificacion'],
+                                properties: {
+                                    tutorId: { type: 'string', example: 'tutor-jc' },
+                                    tutorNombres: { type: 'string', example: 'Juan Cachon' },
+                                    tutoriaId: { type: 'string', example: 'tutoria-1' },
+                                    autor: { type: 'string', example: 'Juan Filip Coral' },
+                                    calificacion: { type: 'number', example: 5 },
+                                    pregunta1: { type: 'number', example: 5 },
+                                    pregunta2: { type: 'number', example: 5 },
+                                    pregunta3: { type: 'number', example: 5 },
+                                    pregunta4: { type: 'number', example: 5 },
+                                    comentario: { type: 'string', example: 'Excelente sesión' }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    201: { description: 'Reseña creada exitosamente' }
+                }
+            }
+        },
+        '/resenas/tutor/{tutorId}': {
+            get: {
+                summary: 'Obtener reseñas asociadas a un tutor específico',
+                tags: ['Reseñas'],
+                parameters: [
+                    { name: 'tutorId', in: 'path', required: true, schema: { type: 'string' } },
+                    { name: 'tutorNombres', in: 'query', schema: { type: 'string' } }
+                ],
+                responses: {
+                    200: { description: 'Listado de reseñas del tutor' }
+                }
+            }
+        },
+        '/resenas/tutor/{tutorId}/promedio': {
+            get: {
+                summary: 'Calcular promedio y total de estrellas de un tutor',
+                tags: ['Reseñas'],
+                parameters: [
+                    { name: 'tutorId', in: 'path', required: true, schema: { type: 'string' } },
+                    { name: 'tutorNombres', in: 'query', schema: { type: 'string' } }
+                ],
+                responses: {
+                    200: { description: 'Promedio y estadísticas de calificación del tutor' }
+                }
+            }
+        },
+        '/admin/solicitudes': {
+            get: {
+                summary: 'Listar todas las postulaciones de tutores para administración',
+                tags: ['Administración'],
+                responses: {
+                    200: { description: 'Listado de postulaciones' }
+                }
+            }
+        },
+        '/admin/solicitudes/pendientes': {
+            get: {
+                summary: 'Listar solicitudes pendientes de verificación de notas',
+                tags: ['Administración'],
+                responses: {
+                    200: { description: 'Listado de solicitudes pendientes' }
+                }
+            }
+        },
+        '/admin/tutores': {
+            get: {
+                summary: 'Listar tutores aprobados para control y habilitación en catálogo',
+                tags: ['Administración'],
+                responses: {
+                    200: { description: 'Listado de tutores aprobados' }
+                }
+            }
+        },
+        '/admin/tutores/{id}/aprobar': {
+            post: {
+                summary: 'Aprobar tutor verificado',
+                tags: ['Administración'],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } }
+                ],
+                responses: {
+                    200: { description: 'Tutor aprobado' }
+                }
+            }
+        },
+        '/admin/tutores/{id}/rechazar': {
+            post: {
+                summary: 'Rechazar solicitud de tutor indicando motivo',
+                tags: ['Administración'],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } }
+                ],
+                requestBody: {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    motivo: { type: 'string', example: 'La nota en la materia no cumple con el 4.5 mínimo requerido.' }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    200: { description: 'Solicitud rechazada' }
+                }
+            }
+        },
+        '/admin/tutores/{id}/estado': {
+            patch: {
+                summary: 'Habilitar o deshabilitar tutor del catálogo público',
+                tags: ['Administración'],
+                parameters: [
+                    { name: 'id', in: 'path', required: true, schema: { type: 'string' } }
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['activo'],
+                                properties: {
+                                    activo: { type: 'boolean', example: false }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    200: { description: 'Estado modificado' }
                 }
             }
         },

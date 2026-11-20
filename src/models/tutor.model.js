@@ -89,6 +89,35 @@ const tutorSchema = new mongoose.Schema(
         activo: {
             type: Boolean,
             default: true
+        },
+        estadoAprobacion: {
+            type: String,
+            enum: ['pendiente', 'aprobado', 'rechazado'],
+            default: 'aprobado'
+        },
+        notaMateria: {
+            type: Number,
+            default: 4.8
+        },
+        promedioAcumulado: {
+            type: Number,
+            default: 4.3
+        },
+        soporteNotasNombre: {
+            type: String,
+            default: 'certificado_oficial.pdf'
+        },
+        soporteNotasUrl: {
+            type: String,
+            default: ''
+        },
+        motivoRechazo: {
+            type: String,
+            default: ''
+        },
+        fechaRegistro: {
+            type: String,
+            default: () => new Date().toLocaleDateString('es-CO')
         }
     },
     {
