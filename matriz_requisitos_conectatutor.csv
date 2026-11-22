@@ -1,0 +1,146 @@
+﻿"Requisito";"Historia de Usuario";"Criterios de Aceptacion Listados";"Estado"
+"RQF 01: Registro de Estudiante Solicitante";"HU-01: Registro de Estudiante Solicitante";"1. El formulario solicita obligatoriamente: Nombres, Apellidos, Correo Institucional, Contrasena, Semestre, Carrera y Sede.
+2. Valida estrictamente que el correo pertenezca al dominio institucional @urosario.edu.co.
+3. Valida que el correo no se encuentre previamente registrado en el sistema.
+4. Al registrar con exito, crea la cuenta con rol estudiante en MongoDB y responde con estado HTTP 201.";"Completo"
+"RQF 02: Registro de Estudiante Tutor";"HU-02: Registro de Estudiante Tutor / Postulacion";"1. El formulario solicita datos personales, correo @urosario.edu.co, semestre, carrera, sede, modalidad, materia principal, cursos adicionales, precio por hora y descripcion.
+2. Exige registrar la calificacion obtenida en la materia dictada y el promedio acumulado del estudiante.
+3. Permite cargar el nombre del soporte de notas en formato digital.
+4. Registra al tutor inicialmente con estado de aprobacion pendiente y estado activo false a la espera de revision administrativa.";"Completo"
+"RQF 03: Gestion de Administrador";"HU-03: Gestion y Autenticacion de Administrador";"1. El sistema reconoce credenciales con privilegios de administrador de forma segura (admin@urosario.edu.co o usuario admin).
+2. Tras la autenticacion exitosa, habilita la interfaz del panel de coordinacion (DashboardAdmin).
+3. Restringe las funciones de revision de solicitudes, aprobacion y control de catalogo exclusivamente a este rol.";"Completo"
+"RQF 04: Campos de registro base";"HU-04: Validacion de campos base de registro";"1. Los campos Nombres, Apellidos, Correo Institucional, Semestre y Carrera son de diligenciamiento obligatorio en el formulario.
+2. El sistema rechaza el envio con codigo HTTP 400 y mensaje de error descriptivo si alguno de estos campos falta o esta vacio.";"Completo"
+"RQF 05: Campos de registro tutor";"HU-05: Campos especializados para postulacion de tutor";"1. El formulario de postulacion de tutores exige indicar al menos una materia principal y permite agregar materias adicionales dictables.
+2. Requiere registrar la tarifa monetaria por hora y la modalidad de atencion ofrecida (Presencial o Virtual).";"Completo"
+"RQF 06: Inicio de sesion";"HU-06: Inicio de sesion de usuarios";"1. La interfaz dispone de campos para identificador (correo institucional o prefijo de usuario) y clave.
+2. Si las credenciales coinciden, retorna la informacion del usuario autenticado, su rol y codigo HTTP 200.
+3. Si las credenciales son incorrectas o no existen, responde con codigo HTTP 401 y mensaje de credenciales invalidas.";"Completo"
+"RQF 07: Enlaces de registro desde el login";"HU-07: Navegacion a formularios de registro";"1. La pantalla de login presenta enlaces independientes y rotulados para registrarse como estudiante o postularse como tutor.
+2. Al hacer clic en cada enlace, redirige inmediatamente a la vista de formulario correspondiente.";"Completo"
+"RQF 08: Barra de navegacion superior";"HU-08: Componente de barra superior de navegacion";"1. La barra superior se mantiene fija y visible durante la navegacion entre todas las vistas de la aplicacion.
+2. Muestra el logotipo y nombre de la plataforma ConectaTutor.
+3. Presenta el nombre del usuario conectado, su rol y avatar con iniciales.";"Completo"
+"RQF 09: Enlaces de navegacion principales";"HU-09: Enrutamiento en barra de navegacion";"1. La barra de navegacion incluye hipervinculos a Explorar Tutores y Mis Tutorias para usuarios estudiantes.
+2. Provee acceso directo a Tutorias Asignadas para tutores y a Solicitudes para el coordinador.";"Completo"
+"RQF 10: Notificaciones del sistema";"HU-10: Notificaciones del sistema";"1. La cabecera superior muestra un icono de campana interactivo para senalizar novedades del sistema.
+2. Al interactuar con el icono, despliega un indicador visual de alertas para el usuario.";"Parcialmente completo: La interfaz de usuario presenta el icono interactivo de campana en la cabecera, pero no se encuentra conectado a un servicio de mensajeria o notificaciones push en tiempo real en el backend."
+"RQF 11: Cabecera de perfil de usuario";"HU-11: Cabecera de perfil de usuario";"1. La cabecera visualiza el nombre completo del usuario, su rol en el sistema (estudiante, tutor o admin) y su programa academico.
+2. Incluye el identificador de sede a la que pertenece.";"Completo"
+"RQF 12: Biografia y descripcion del tutor";"HU-12: Biografia y experiencia del tutor";"1. El perfil y tarjeta del tutor muestran un texto descriptivo detallando su experiencia academica y trayectoria como monitor.
+2. Permite al tutor editar y actualizar su descripcion desde su perfil.";"Completo"
+"RQF 13: Tarifa por hora del tutor";"HU-13: Configuracion y formato de tarifa horaria";"1. El sistema almacena el valor numerico de la tarifa por hora en pesos colombianos.
+2. Despliega el valor formateado con signo de moneda y sufijo indicador (ej. $20.000 x hora).";"Completo"
+"RQF 14: Busqueda de tutores por texto libre";"HU-14: Busqueda por texto libre de materias";"1. Cuenta con una barra de busqueda por texto libre orientada a nombres de materias (ej. Calculo, Algebra, Fisica).
+2. Filtra dinamicamente la lista de resultados de manera insensible a mayusculas o minusculas.";"Completo"
+"RQF 15: Filtro de tutores por sede";"HU-15: Filtro de tutores por sede universitaria";"1. El catalogo incluye un selector desplegable con las sedes disponibles de la Universidad del Rosario (Claustro, Mutis, Quinta de Mutis, Todas).
+2. Actualiza la lista de tutores mostrando unicamente quienes atienden en la sede elegida.";"Completo"
+"RQF 16: Filtro de tutores por modalidad";"HU-16: Filtro de tutores por modalidad";"1. El catalogo dispone de un selector de modalidad con opciones: Todas, Presencial y Virtual.
+2. Al seleccionar una opcion, filtra de inmediato la cuadricula de tarjetas segun la modalidad ofrecida.";"Completo"
+"RQF 17: Visualizacion de tarjetas de resultados";"HU-17: Visualizacion de resultados en tarjetas individuales";"1. Muestra los tutores activos y aprobados en tarjetas individuales organizadas en cuadricula responsiva.
+2. Si no existen coincidencias para los filtros aplicados, despliega un mensaje informativo de no coincidencia.";"Completo"
+"RQF 18: Avatar con iniciales del tutor";"HU-18: Avatar circular con iniciales";"1. Cada tarjeta de tutor renderiza un avatar circular generado a partir de las iniciales de su nombre y apellido (ej. DN para Daniel Nieto).
+2. El circulo dispone de un fondo con color representativo legible.";"Completo"
+"RQF 19: Resumen de informacion en tarjeta de tutor";"HU-19: Resumen de tarjeta del tutor";"1. La tarjeta presenta de forma organizada: nombre completo del tutor, semestre academico actual, carrera y un fragmento de su biografia.";"Completo"
+"RQF 20: Etiquetas de cursos en tarjeta";"HU-20: Etiquetas de materias dominadas";"1. Visualiza las asignaturas impartidas por el tutor mediante etiquetas redondeadas (pills).
+2. Organiza las etiquetas evitando saturacion visual en la tarjeta.";"Completo"
+"RQF 21: Visualizacion de puntaje en tarjeta";"HU-21: Calificacion promedio y estrellas";"1. Muestra la calificacion promedio del tutor en formato numerico con un decimal (ej. 4.9 o 5.0).
+2. Despliega la representacion grafica de estrellas correspondiente a dicho puntaje.";"Completo"
+"RQF 22: Visualizacion de tarifa en tarjeta";"HU-22: Visualizacion de tarifa en tarjeta";"1. Muestra de forma visible y destacada el precio por hora en la parte inferior de la tarjeta.
+2. Indica claramente la periodicidad del costo por hora de atencion.";"Completo"
+"RQF 23: Boton Agendar en tarjeta";"HU-23: Boton de agendamiento directo";"1. Cada tarjeta dispone de un boton principal claramente identificado con el texto Agendar.
+2. Al pulsar el boton, abre la vista de reserva precargando los datos del tutor seleccionado.";"Completo"
+"RQF 24: Perfil detallado del tutor";"HU-24: Vista de perfil detallado del tutor";"1. Al hacer clic sobre el nombre o tarjeta del tutor, se presenta la vista de perfil completo con informacion detallada, cursos y opiniones de estudiantes.
+2. Permite retornar facilmente al catalogo mediante boton de navegacion.";"Completo"
+"RQF 25: Visualizacion de dias de atencion";"HU-25: Componente de dias y franjas disponibles";"1. El perfil visualiza un componente semanal con los dias en los que el monitor tiene disponibilidad (LU, MA, MI, JU, VI, SA).
+2. Diferencia graficamente los dias con horarios habilitados de los no disponibles.";"Completo"
+"RQF 26: Acordeon de cursos asesorados";"HU-26: Visualizacion de cursos asesorados en perfil";"1. El perfil del tutor lista la totalidad de las materias asesoradas por el monitor.
+2. Permite organizar y consultar las materias disponibles.";"Parcialmente completo: El perfil del tutor muestra la lista completa de asignaturas mediante etiquetas visuales (chips/pills), pero se presentan en un contenedor estatico sin el componente interactivo de acordeon colapsable."
+"RQF 27: Seccion de resenas en el perfil";"HU-27: Seccion de resenas en el perfil";"1. El perfil del tutor contiene una seccion dedicada a Resenas que lista los comentarios dejados por estudiantes de sesiones previas.
+2. Consume el endpoint GET /api/resenas?tutorId=... para cargar la informacion.";"Completo"
+"RQF 28: Autoria de resenas en el perfil";"HU-28: Autoria y fecha de las resenas";"1. Cada comentario de resena publicado exhibe el nombre del estudiante autor, la calificacion asignada y la fecha del registro.";"Completo"
+"RQF 29: Inicio del flujo de reserva";"HU-29: Inicio del flujo de reserva";"1. El sistema inicia la interfaz de agendamiento al confirmar la reserva desde la tarjeta o el perfil del tutor.
+2. Carga en pantalla los datos del monitor, precio y materia seleccionada.";"Completo"
+"RQF 30: Carrusel de seleccion de fechas";"HU-30: Selector horizontal de fechas";"1. El formulario de agendamiento cuenta con un selector horizontal de dias y fechas calendario del mes actual.
+2. Permite seleccionar un dia especifico para cargar las franjas horarias asociadas a esa fecha.";"Completo"
+"RQF 31: Bloques de tiempo disponibles";"HU-31: Visualizacion de bloques de horas disponibles";"1. Despliega los bloques de horas disponibles correspondientes al dia marcado en el carrusel (ej. 9:00 - 10:30 AM).
+2. Permite seleccionar una unica franja horaria para la cita.";"Completo"
+"RQF 32: Seleccion de modalidad en reserva";"HU-32: Seleccion de modalidad de tutoria al agendar";"1. Permite seleccionar entre modalidad Presencial o Virtual segun las opciones habilitadas por el monitor.
+2. Ajusta los datos del agendamiento (sede fisica o preparacion de enlace virtual) segun la eleccion.";"Completo"
+"RQF 33: Campo de observaciones o temas especificos";"HU-33: Campo de observaciones o temas especificos";"1. Dispone de un campo de texto libre opcional para que el estudiante detalle dudas puntuales, temas de parcial o capitulos a revisar.
+2. Admite registrar nombres de documentos o archivos de referencia.";"Completo"
+"RQF 34: Resumen previo a la confirmacion de reserva";"HU-34: Resumen previo a la confirmacion";"1. Presenta un resumen completo con: tutor, materia, fecha, hora seleccionada, modalidad y tarifa total antes de registrar la cita en firme.";"Completo"
+"RQF 35: Confirmacion final de reserva";"HU-35: Boton de confirmacion final de reserva";"1. La vista de resumen incluye un boton destacado para confirmar y enviar la solicitud de tutoria.
+2. Persiste la reserva en la base de datos (POST /api/tutorias) y redirige al listado de Mis Tutorias.";"Completo"
+"RQF 36: Vista Mis Tutorias (Listado general)";"HU-36: Vista Mis Tutorias (Listado general)";"1. La seccion Mis Tutorias consulta el endpoint GET /api/tutorias?estudianteId=... y visualiza las tutorias agendadas por el estudiante autenticado.
+2. Agrupa o identifica las sesiones de acuerdo con su estado (pendiente, completada, cancelada).";"Completo"
+"RQF 37: Pestanas de estado en Mis Tutorias";"HU-37: Pestanas de estado en Mis Tutorias";"1. Cuenta con pestanas interactivas para alternar entre tutorias Pendientes / Proximas y Finalizadas / Historial.
+2. Filtra las tarjetas mostradas en pantalla segun la pestana activa.";"Completo"
+"RQF 38: Tarjeta de tutoria en el listado";"HU-38: Tarjeta de tutoria en el listado";"1. Cada tutoria se representa en una tarjeta con materia, nombre del tutor/estudiante, fecha, franja horaria, modalidad y badge de estado.";"Completo"
+"RQF 39: Cancelacion de tutoria programada";"HU-39: Cancelacion de tutoria programada";"1. Las tarjetas de tutorias pendientes disponen de una opcion visible para cancelar la sesion.
+2. Al confirmar la accion, actualiza el estado a cancelada mediante PATCH /api/tutorias/:id/estado.";"Completo"
+"RQF 40: Confirmacion previa de cancelacion";"HU-40: Modal o advertencia de confirmacion de cancelacion";"1. El sistema solicita confirmacion obligatoria del usuario antes de proceder con la cancelacion para evitar acciones involuntarias.";"Completo"
+"RQF 41: Detalle de tutoria agendada";"HU-41: Detalle de tutoria agendada";"1. Despliega la informacion completa de la sesion incluyendo indicador de tiempo restante (ej. En 3 dias), observaciones cargadas y datos de contacto.";"Completo"
+"RQF 42: Enlace de videollamada para tutorias virtuales";"HU-42: Enlace de videollamada para tutorias virtuales";"1. En tutorias virtuales, la tarjeta y el detalle ofrecen un boton interactivo para abrir la sesion de videollamada (Google Meet).
+2. El enlace abre en una nueva pestana de forma segura.";"Completo"
+"RQF 43: Informacion de ubicacion para tutorias presenciales";"HU-43: Informacion de ubicacion para tutorias presenciales";"1. En tutorias presenciales, la tarjeta detalla con precision la sede de la universidad y el punto de encuentro convenido (ej. Sede Claustro).";"Completo"
+"RQF 44: Acceso al historial de tutorias pasadas";"HU-44: Acceso al historial de tutorias pasadas";"1. La pestana de historial lista cronologicamente las sesiones que ya han sido completadas o cuya fecha ya expiro.";"Completo"
+"RQF 45: Opcion de calificar tutoria finalizada";"HU-45: Opcion de calificar tutoria finalizada";"1. Las sesiones finalizadas pendientes de calificacion muestran un boton visible para calificar la tutoria.
+2. Una vez calificada, el boton se inhabilita para prevenir valoraciones duplicadas.";"Completo"
+"RQF 46: Modal de calificacion y resena";"HU-46: Modal de calificacion y resena";"1. Presenta la vista de feedback (FeedbackMonitoriaEstudiante) con seleccion de calificacion de 1 a 5 y evaluacion de aspectos de la sesion.
+2. Provee un campo de texto para redactar opiniones cualitativas.";"Completo"
+"RQF 47: Envio de calificacion y retroalimentacion";"HU-47: Boton de envio de calificacion";"1. Dispone de un boton para enviar la evaluacion completada.
+2. Persiste la calificacion en la coleccion de resenas (POST /api/resenas) y actualiza el estado de la sesion a completada.";"Completo"
+"RQF 48: Cierre de sesion seguro";"HU-48: Cierre de sesion seguro";"1. Cuenta con una opcion visible de Cerrar sesion en el menu de usuario o cabecera.
+2. Limpia los datos de autenticacion almacenados localmente y redirecciona a la vista de login.";"Completo"
+"RQF 49: Validacion de campos obligatorios en formularios";"HU-49: Validacion de campos obligatorios en formularios";"1. El sistema resalta con avisos visuales o texto explicativo los campos obligatorios incompletos o con formato invalido.
+2. Bloquea el procesamiento del formulario hasta corregir las inconsistencias.";"Completo"
+"RQF 50: Editar perfil estudiante";"HU-50: Editar perfil estudiante";"1. Provee un formulario para actualizar telefono, semestre, carrera y datos personales del estudiante mediante PUT /api/usuarios/:id.
+2. Valida la consistencia de los datos antes de guardarlos en la base de datos.";"Completo"
+"RQF 51: Editar perfil tutor";"HU-51: Editar perfil tutor";"1. El monitor puede actualizar su tarifa por hora, materias dictadas, descripcion y modalidad de atencion mediante PUT /api/tutores/:id.
+2. Permite al monitor alternar su estado activo o inactivo mediante PATCH /api/tutores/:id/disponibilidad.";"Completo"
+"RQF 52: Registro de notas y soporte academico de postulantes";"HU-52: Carga de soporte academico y notas para monitores";"1. El formulario de registro de tutores exige indicar la calificacion obtenida en la materia a dictar (minimo 4.0) y el promedio acumulado (minimo 3.8).
+2. Permite registrar el nombre del documento de soporte de notas (PDF/documento).
+3. Persiste los datos academicos en las colecciones tutors y usuarios para la auditoria del coordinador.";"Completo"
+"RQF 53: Panel de administracion y gestion de postulaciones";"HU-53: Revision, aprobacion y rechazo de postulaciones de tutores";"1. El administrador dispone de una vista especializada (DashboardAdmin / GET /api/admin/solicitudes) que lista las solicitudes pendientes de monitores.
+2. Muestra las notas, promedio y soporte academico de cada postulante.
+3. Permite al administrador aprobar la solicitud (PATCH /api/admin/solicitudes/:id/estado con estado aprobado), activando al tutor en el catalogo publico.
+4. Permite rechazar la solicitud registrando un motivo formal de rechazo.";"Completo"
+"RQF 54: Control administrativo de visibilidad en catalogo";"HU-54: Gestion de visibilidad de tutores por el administrador";"1. El panel de administracion permite conmutar la visibilidad de cualquier monitor aprobado mediante PATCH /api/admin/tutores/:id/visibilidad.
+2. Los tutores marcados con activo false quedan ocultos del catalogo publico para estudiantes.";"Completo"
+"RQF 55: Panel de tutorias asignadas para el monitor";"HU-55: Panel de tutorias asignadas al monitor";"1. Los usuarios con rol tutor cuentan con la vista MonitoriasAsignadas que consulta GET /api/tutorias/asignadas?tutorId=....
+2. Muestra las citas programadas con nombre del estudiante, carrera, telefono, observaciones y boton para entrar a la videollamada.
+3. Permite al tutor marcar sesiones como completadas o canceladas.";"Completo"
+"RQF 56: Generacion automatica de enlace virtual";"HU-56: Generacion automatica de enlace de videollamada";"1. Al reservar una tutoria con modalidad Virtual, el backend genera y asocia automaticamente una URL valida de reunion de Google Meet.
+2. La URL queda guardada en el registro de la tutoria y visible para el estudiante y el tutor.";"Completo"
+"RQF 57: Encuesta estructurada de satisfaccion multidimensional";"HU-57: Evaluacion multidimensional de la tutoria";"1. La interfaz FeedbackMonitoriaEstudiante captura 4 preguntas de evaluacion numerica (1 a 5): puntualidad, dominio conceptual, claridad pedagogica y material de apoyo.
+2. El backend (POST /api/resenas) valida que cada pregunta contenga una puntuacion valida antes de persistir la resena.";"Completo"
+"RQF 58: Recalculo automatico de promedio de estrellas del tutor";"HU-58: Recalculo de calificacion promedio del tutor";"1. Al registrar una nueva resena en POST /api/resenas, el backend calcula el nuevo promedio global de todas las calificaciones del tutor.
+2. Actualiza de manera automatica el campo estrellas en el documento del tutor en MongoDB con precision a un decimal.";"Completo"
+"RQF 59: Control de transiciones de estados de tutoria";"HU-59: Gestion del ciclo de vida de la tutoria";"1. El endpoint PATCH /api/tutorias/:id/estado valida que el nuevo estado sea estrictamente pendiente, completada o cancelada.
+2. Al pasar a completada, ajusta el indicador temporal a Finalizada y activa el derecho a calificar.
+3. Responde con codigo HTTP 400 si se envia un estado desconocido.";"Completo"
+"RQF 60: Documentacion interactiva de la API con Swagger UI";"HU-60: Documentacion interactiva OpenAPI / Swagger";"1. El servidor expone la interfaz Swagger UI en la ruta publica /api-docs.
+2. Publica la especificacion completa OpenAPI 3.0 en formato JSON en /api/docs.json.
+3. Documenta todas las rutas, parametros, modelos y codigos de respuesta de la API.";"Completo"
+"RQF 61: Punto final de monitoreo de salud del servidor";"HU-61: Monitoreo de estado y salud del backend";"1. El endpoint GET /api/salud responde con codigo HTTP 200 y JSON reportando el estado del servicio (ok), marca temporal y estado de conexion a la base de datos.";"Completo"
+"RQNF 01: Seguridad en almacenamiento de contrasenas";"HU-RQNF-01: Cifrado y almacenamiento de credenciales";"1. Las contrasenas deben almacenarse protegidas mediante algoritmos de derivacion criptografica (como bcrypt con salt).
+2. El sistema no debe almacenar contrasenas en texto plano en la base de datos.";"Parcialmente completo: El flujo de autenticacion y validacion de credenciales se encuentra operativo, pero las contrasenas se almacenan y comparan en texto plano sin aplicar funciones de hash criptografico como bcrypt."
+"RQNF 02: Alta disponibilidad de la plataforma";"HU-RQNF-02: Disponibilidad y resiliencia de la plataforma";"1. La arquitectura desacoplada y la persistencia en MongoDB Atlas garantizan operacion continua con minimos tiempos de inactividad.
+2. El backend implementa un mecanismo de contingencia en memoria que mantiene el servicio operativo si la base de datos externa no esta disponible.";"Completo"
+"RQNF 03: Tiempos de respuesta del servidor";"HU-RQNF-03: Rendimiento y latencia de endpoints";"1. Las peticiones de consulta de catalogo, autenticacion y reservas responden en menos de 2 segundos bajo condiciones normales de red.
+2. Las consultas en MongoDB se optimizan mediante indices sobre identificadores y campos de busqueda.";"Completo"
+"RQNF 04: Diseno responsivo y adaptabilidad multidispositivo";"HU-RQNF-04: Adaptabilidad a diferentes pantallas";"1. La interfaz implementa diseno responsivo adaptativo que se ajusta de forma fluida a pantallas de escritorio, tabletas y telefonos moviles.";"Completo"
+"RQNF 05: Compatibilidad con navegadores web modernos";"HU-RQNF-05: Compatibilidad con navegadores estandar";"1. El sistema opera de manera identica y sin perdida de funciones en las versiones actuales de Google Chrome, Mozilla Firefox, Microsoft Edge y Safari.";"Completo"
+"RQNF 06: Actualizacion de agenda y disponibilidad";"HU-RQNF-06: Sincronizacion de agenda en tiempo real";"1. La disponibilidad del tutor se actualiza inmediatamente en la base de datos tras confirmar una reserva o cancelacion.
+2. Los cambios deben reflejarse en tiempo real en los clientes conectados sin requerir recarga manual.";"Parcialmente completo: La actualizacion de disponibilidad se persiste de inmediato en la base de datos mediante endpoints REST, pero la sincronizacion en clientes concurrentes requiere recarga o refetch al no disponer de WebSockets."
+"RQNF 07: Prevencion de colision y cruce de horarios";"HU-RQNF-07: Prevencion de cruce de horarios del estudiante";"1. El sistema debe validar que el estudiante no tenga otra tutoria agendada en la misma franja horaria antes de autorizar una nueva reserva.";"Parcialmente completo: Se valida la franja del tutor en el proceso de reserva, pero no se realiza la verificacion cruzada para impedir que un estudiante agende dos sesiones distintas a la misma hora."
+"RQNF 08: Envio automatizado de correos de confirmacion";"HU-RQNF-08: Notificaciones por correo electronico transaccional";"1. El sistema despacha correos electronicos transaccionales con los detalles de la cita tanto al estudiante como al monitor tras reservar o cancelar.";"No implementado"
+"RQNF 09: Paginacion y control de rendimiento en listados";"HU-RQNF-09: Paginacion y limites de carga de datos";"1. Los endpoints de catalogo y tutorias deben implementar paginacion por lotes (page, limit) para evitar sobrecarga de red en conjuntos masivos de datos.";"Parcialmente completo: Los endpoints devuelven la totalidad de los registros con tiempos de respuesta bajos, pero no implementan paginacion formal basada en parametros de desplazamiento (limit/offset) en el backend."
+"RQNF 10: Control de expiracion de sesiones inactivas";"HU-RQNF-10: Expiracion de sesion por inactividad";"1. El sistema invalida la sesion y redirige al login tras un periodo prolongado de inactividad del usuario (ej. 30 minutos).";"Parcialmente completo: Se gestiona el estado de sesion localmente en el navegador a traves de localStorage, pero no se cuenta con un mecanismo de expiracion automatica por tiempo de inactividad ni tokens JWT temporizados."
+"RQNF 11: Persistencia en la nube con base de datos NoSQL";"HU-RQNF-11: Persistencia en MongoDB Atlas";"1. La informacion de usuarios, tutores, tutorias y resenas se almacena de forma persistente en un cluster gestionado de MongoDB Atlas con esquemas validados con Mongoose.";"Completo"
+"RQNF 12: Estructura estandarizada de errores y excepciones";"HU-RQNF-12: Formato estandarizado de respuesta a errores";"1. Todas las respuestas de error del servidor retornan un objeto JSON consistente con la firma { mensaje: string, errores?: string[], error?: string }.
+2. Se utilizan los codigos de estado HTTP estandar (400, 401, 404, 409, 500).";"Completo"
+"RQNF 13: Resiliencia en resolucion DNS en entornos locales";"HU-RQNF-13: Resiliencia en resolucion de registros DNS SRV";"1. El conector de base de datos configura servidores DNS publicos (8.8.8.8, 1.1.1.1) para solventar limitaciones del resolver de Node.js en Windows y redes ISP locales al consultar cadenas mongodb+srv://.";"Completo"
+"RQNF 14: Configuracion de seguridad de origen cruzado (CORS)";"HU-RQNF-14: Habilitacion de CORS para el cliente frontend";"1. La API Express habilita cabeceras de Cross-Origin Resource Sharing permitiendo la comunicacion fluida y segura con el cliente frontend en Vite/React.";"Completo"
