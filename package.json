@@ -1,6 +1,6 @@
 {
   "name": "backend-celula-arguello-moreno-nieto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Repositorio de manejo de Backend para diseño web, elaborado por: Geronimo Arguello, Daniel Moreno y Daniel Nieto.",
   "main": "src/server.js",
   "scripts": {

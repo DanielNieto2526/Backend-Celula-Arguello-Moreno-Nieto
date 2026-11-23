@@ -53,7 +53,7 @@ app.get(['/', '/api', '/salud', '/api/salud'], (req, res) => {
     res.json({
         estado: 'ok',
         app: 'ConectaTutor API - Universidad del Rosario',
-        version: '1.0.0',
+        version: '1.0.1',
         dbConectada: conectada,
         baseDeDatos: conectada ? 'MongoDB Atlas' : 'Almacén en memoria',
         mongoConfigurada: uriConfig,
