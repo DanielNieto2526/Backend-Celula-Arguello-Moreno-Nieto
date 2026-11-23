@@ -29,8 +29,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // Middleware para asegurar conexión a MongoDB en entornos serverless (Vercel)
 app.use(async (req, res, next) => {
     const { estaConectado, conectarDB } = require('./config/db');
-    const uri = process.env.MONGO_URI || process.env.MONGO_URL || process.env.MONGODB_URI;
-    if (!estaConectado() && uri) {
+    if (!estaConectado()) {
         try {
             await conectarDB();
         } catch (e) {

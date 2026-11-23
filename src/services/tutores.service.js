@@ -280,6 +280,9 @@ async function actualizarTutor(tutorId, cambios) {
         if (typeof tutorId === 'string' && tutorId.includes('@')) {
             queryOr.push({ correo: tutorId.trim().toLowerCase() });
         }
+        if (cambios.correo) {
+            queryOr.push({ correo: cambios.correo.trim().toLowerCase() });
+        }
 
         let tutor = await Tutor.findOneAndUpdate(
             { $or: queryOr },

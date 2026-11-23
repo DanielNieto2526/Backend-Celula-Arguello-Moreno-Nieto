@@ -17,13 +17,15 @@ const {
 
 let isConnected = false;
 
+const DEFAULT_MONGO_URI = 'mongodb+srv://jerolejalu_db_user:Jeronimo2006.@conectatutor.mqiip1h.mongodb.net/?retryWrites=true&w=majority';
+
 async function conectarDB() {
     if (mongoose.connection.readyState === 1) {
         isConnected = true;
         return true;
     }
 
-    const uri = process.env.MONGO_URI || process.env.MONGO_URL || process.env.MONGODB_URI;
+    const uri = process.env.MONGO_URI || process.env.MONGO_URL || process.env.MONGODB_URI || DEFAULT_MONGO_URI;
     const dbName = process.env.DB_NAME || 'conectatutor_db';
 
     if (!uri || uri.trim() === '') {

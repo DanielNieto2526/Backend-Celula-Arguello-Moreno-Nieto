@@ -1,8 +1,10 @@
 const app = require('../src/app');
 const { conectarDB, estaConectado } = require('../src/config/db');
 
+const DEFAULT_MONGO_URI = 'mongodb+srv://jerolejalu_db_user:Jeronimo2006.@conectatutor.mqiip1h.mongodb.net/?retryWrites=true&w=majority';
+
 module.exports = async (req, res) => {
-    const uri = process.env.MONGO_URI || process.env.MONGO_URL || process.env.MONGODB_URI;
+    const uri = process.env.MONGO_URI || process.env.MONGO_URL || process.env.MONGODB_URI || DEFAULT_MONGO_URI;
     if (!estaConectado() && uri) {
         try {
             await conectarDB();
