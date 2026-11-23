@@ -3,7 +3,8 @@ const tutoriasService = require('../services/tutorias.service');
 async function listar(req, res, next) {
     try {
         const filtros = {
-            estudianteId: req.query.estudianteId,
+            estudianteId: req.query.estudianteId || req.query.usuarioId || req.headers['x-user-id'],
+            estudianteCorreo: req.query.estudianteCorreo || req.query.correo || req.headers['x-user-email'],
             estado: req.query.estado
         };
         const tutorias = await tutoriasService.listarTutorias(filtros);

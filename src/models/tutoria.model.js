@@ -11,6 +11,10 @@ const tutoriaSchema = new mongoose.Schema(
             type: String,
             required: [true, 'El ID del tutor es requerido']
         },
+        tutorUsuarioId: {
+            type: String,
+            default: ''
+        },
         tutorNombres: {
             type: String,
             required: [true, 'El nombre del tutor es requerido']
@@ -27,13 +31,21 @@ const tutoriaSchema = new mongoose.Schema(
             type: String,
             default: ''
         },
+        tutorAvatar: {
+            type: String,
+            default: ''
+        },
         fechaTexto: {
             type: String,
             required: [true, 'La fecha de la tutoría es requerida']
         },
+        fechaISO: {
+            type: String,
+            default: ''
+        },
         tiempoRestanteTexto: {
             type: String,
-            default: 'En 3 dias'
+            default: 'En 2 dias'
         },
         lugarTexto: {
             type: String,
@@ -62,39 +74,75 @@ const tutoriaSchema = new mongoose.Schema(
         },
         estudianteId: {
             type: String,
-            default: '1'
+            default: ''
         },
         estudianteNombres: {
             type: String,
-            default: 'Daniela'
+            default: ''
         },
         estudianteApellidos: {
             type: String,
-            default: 'Moreno'
+            default: ''
         },
         estudianteIniciales: {
             type: String,
-            default: 'DM'
+            default: ''
         },
         estudianteCorreo: {
             type: String,
-            default: 'dmoreno@urosario.edu.co'
+            default: ''
         },
         estudianteTelefono: {
             type: String,
-            default: '320 4051954'
+            default: ''
         },
         estudianteCarrera: {
             type: String,
-            default: '6º semestre ISE'
+            default: ''
         },
         estudianteSemestreCompleto: {
             type: String,
-            default: 'sexto semestre Ingenieria de Sistemas'
+            default: ''
         },
         estudianteAvatar: {
             type: String,
             default: ''
+        },
+        duracionHoras: {
+            type: Number,
+            default: 1
+        },
+        precioHora: {
+            type: Number,
+            default: 0
+        },
+        precioTotal: {
+            type: Number,
+            default: 0
+        },
+        modalidad: {
+            type: String,
+            default: ''
+        },
+        franjaTexto: {
+            type: String,
+            default: ''
+        },
+        diaSemana: {
+            type: String,
+            default: ''
+        },
+        diaNumero: {
+            type: Number,
+            default: 0
+        },
+        mes: {
+            type: String,
+            default: ''
+        },
+        año: {
+            type: Number,
+            default: 0
         },
         detalles: {
             type: String,
@@ -102,6 +150,14 @@ const tutoriaSchema = new mongoose.Schema(
         },
         nombresArchivos: {
             type: [String],
+            default: []
+        },
+        archivos: {
+            type: [mongoose.Schema.Types.Mixed],
+            default: []
+        },
+        archivosAdjuntos: {
+            type: [mongoose.Schema.Types.Mixed],
             default: []
         },
         calificacion: {

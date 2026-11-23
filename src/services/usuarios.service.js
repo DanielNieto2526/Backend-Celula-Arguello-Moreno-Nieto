@@ -1,4 +1,5 @@
 const Usuario = require('../models/usuario.model');
+const Tutor = require('../models/tutor.model');
 const { estaConectado } = require('../config/db');
 const { USUARIOS_INICIALES } = require('../utils/seedData');
 const HttpError = require('../utils/HttpError');
@@ -15,7 +16,14 @@ async function listarUsuarios() {
 
 async function obtenerUsuarioPorId(id) {
     if (estaConectado()) {
-        const usuario = await Usuario.findOne({ $or: [{ id: id }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }] });
+        const queryOr = [{ id: id }];
+        if (/^[0-9a-fA-F]{24}$/.test(id)) {
+            queryOr.push({ _id: id });
+        }
+        if (typeof id === 'string' && id.includes('@')) {
+            queryOr.push({ correo: id.trim().toLowerCase() });
+        }
+        const usuario = await Usuario.findOne({ $or: queryOr });
         if (!usuario) {
             throw new HttpError(404, `Usuario con id ${id} no encontrado`);
         }
@@ -62,14 +70,82 @@ async function crearUsuario(datos) {
 
 async function actualizarUsuario(id, cambios) {
     if (estaConectado()) {
+        const queryOr = [{ id: id }];
+        if (/^[0-9a-fA-F]{24}$/.test(id)) {
+            queryOr.push({ _id: id });
+        }
+        if (typeof id === 'string' && id.includes('@')) {
+            queryOr.push({ correo: id.trim().toLowerCase() });
+        }
         const usuario = await Usuario.findOneAndUpdate(
-            { $or: [{ id: id }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }] },
-            cambios,
+            { $or: queryOr },
+            { $set: cambios },
             { new: true, runValidators: true }
         );
         if (!usuario) {
             throw new HttpError(404, `Usuario con id ${id} no encontrado`);
         }
+
+        if (usuario.rol === 'tutor') {
+            const tutorCambios = {};
+            if (cambios.avatarUrl !== undefined) tutorCambios.avatarUrl = cambios.avatarUrl;
+            if (cambios.fotoPerfil !== undefined) {
+                tutorCambios.avatarUrl = cambios.fotoPerfil;
+                tutorCambios.fotoPerfil = cambios.fotoPerfil;
+            }
+            if (cambios.salones !== undefined) tutorCambios.salones = cambios.salones;
+            if (cambios.cursos !== undefined) tutorCambios.cursos = cambios.cursos;
+            if (cambios.diasDisponibles !== undefined) tutorCambios.diasDisponibles = cambios.diasDisponibles;
+            if (cambios.precioHora !== undefined) tutorCambios.precioHora = cambios.precioHora;
+            if (cambios.descripcion !== undefined) tutorCambios.descripcion = cambios.descripcion;
+            if (cambios.telefono !== undefined) tutorCambios.telefono = cambios.telefono;
+            if (cambios.nombres !== undefined) tutorCambios.nombres = cambios.nombres;
+            if (cambios.apellidos !== undefined) tutorCambios.apellidos = cambios.apellidos;
+            if (cambios.sede !== undefined) tutorCambios.sede = cambios.sede;
+            if (cambios.modalidad !== undefined) tutorCambios.modalidad = cambios.modalidad;
+
+            if (Object.keys(tutorCambios).length > 0) {
+                await Tutor.findOneAndUpdate(
+                    { $or: [{ id: id }, { usuarioId: id }, { correo: usuario.correo }] },
+                    { $set: tutorCambios }
+                );
+            }
+        }
+
+        // Sincronizar en vivo las tutorías relacionadas para que los cambios se reflejen en todas las pantallas
+        try {
+            const Tutoria = require('../models/tutoria.model');
+            if (usuario.rol === 'estudiante') {
+                const tutoriaEstCambios = {};
+                if (cambios.telefono !== undefined) tutoriaEstCambios.estudianteTelefono = cambios.telefono;
+                if (cambios.avatarUrl !== undefined) tutoriaEstCambios.estudianteAvatar = cambios.avatarUrl;
+                if (cambios.nombres !== undefined) tutoriaEstCambios.estudianteNombres = cambios.nombres;
+                if (cambios.apellidos !== undefined) tutoriaEstCambios.estudianteApellidos = cambios.apellidos;
+                if (cambios.semestreTexto !== undefined) tutoriaEstCambios.estudianteSemestreCompleto = cambios.semestreTexto;
+                if (cambios.carrera !== undefined) tutoriaEstCambios.estudianteCarrera = cambios.carrera;
+                if (Object.keys(tutoriaEstCambios).length > 0) {
+                    await Tutoria.updateMany(
+                        { $or: [{ estudianteId: id }, { estudianteCorreo: usuario.correo }] },
+                        { $set: tutoriaEstCambios }
+                    );
+                }
+            } else if (usuario.rol === 'tutor') {
+                const tutoriaTutCambios = {};
+                if (cambios.avatarUrl !== undefined) tutoriaTutCambios.tutorAvatar = cambios.avatarUrl;
+                if (cambios.fotoPerfil !== undefined) tutoriaTutCambios.tutorAvatar = cambios.fotoPerfil;
+                if (cambios.nombres !== undefined) tutoriaTutCambios.tutorNombres = cambios.nombres;
+                if (cambios.apellidos !== undefined) tutoriaTutCambios.tutorApellidos = cambios.apellidos;
+                if (Object.keys(tutoriaTutCambios).length > 0) {
+                    await Tutoria.updateMany(
+                        { $or: [{ tutorId: id }, { tutorUsuarioId: id }] },
+                        { $set: tutoriaTutCambios }
+                    );
+                }
+            }
+        } catch {
+            // continuar si falla sincronización secundaria
+        }
+
         return usuario;
     }
 

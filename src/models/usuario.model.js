@@ -63,7 +63,7 @@ const usuarioSchema = new mongoose.Schema(
         },
         precioHora: {
             type: Number,
-            default: 20000
+            default: 0
         },
         descripcion: {
             type: String,
@@ -78,25 +78,29 @@ const usuarioSchema = new mongoose.Schema(
             default: ''
         },
         diasDisponibles: {
-            type: [String],
+            type: [mongoose.Schema.Types.Mixed],
+            default: []
+        },
+        salones: {
+            type: [mongoose.Schema.Types.Mixed],
             default: []
         },
         estadoAprobacion: {
             type: String,
             enum: ['pendiente', 'aprobado', 'rechazado'],
-            default: 'aprobado'
+            default: 'pendiente'
         },
         activo: {
             type: Boolean,
-            default: true
+            default: false
         },
         notaMateria: {
             type: Number,
-            default: 4.8
+            default: 0
         },
         promedioAcumulado: {
             type: Number,
-            default: 4.3
+            default: 0
         },
         soporteNotasNombre: {
             type: String,

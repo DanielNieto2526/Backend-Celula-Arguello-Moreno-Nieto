@@ -50,8 +50,8 @@ function validarRegistroTutor(req, res, next) {
     if (!correo || typeof correo !== 'string' || !correo.trim().toLowerCase().endsWith('@urosario.edu.co')) {
         errores.push('El correo debe pertenecer al dominio institucional (@urosario.edu.co)');
     }
-    if (precioHora !== undefined && (isNaN(Number(precioHora)) || Number(precioHora) <= 0)) {
-        errores.push('El precio por hora debe ser un número positivo');
+    if (precioHora !== undefined && precioHora !== null && precioHora !== '' && isNaN(Number(precioHora))) {
+        errores.push('El precio por hora debe ser un número válido');
     }
 
     if (errores.length > 0) {

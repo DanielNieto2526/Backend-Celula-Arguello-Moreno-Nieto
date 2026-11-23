@@ -29,7 +29,7 @@ async function obtenerGestion(req, res, next) {
 
 async function aprobar(req, res, next) {
     try {
-        const tutor = await adminService.aprobarTutor(req.params.id);
+        const tutor = await adminService.aprobarTutor(req.params.id, req.body);
         res.status(200).json(tutor);
     } catch (error) {
         next(error);

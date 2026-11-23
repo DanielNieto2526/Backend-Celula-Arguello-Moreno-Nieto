@@ -15,12 +15,25 @@ router.get('/tutores', adminController.obtenerGestion);
 // POST o PATCH /api/admin/tutores/:id/aprobar - Aprobar tutor
 router.post('/tutores/:id/aprobar', adminController.aprobar);
 router.patch('/tutores/:id/aprobar', adminController.aprobar);
+router.post('/solicitudes/:id/aprobar', adminController.aprobar);
+router.patch('/solicitudes/:id/aprobar', adminController.aprobar);
 
-// POST o PATCH /api/admin/tutores/:id/rechazar - Rechazar tutor
+// POST o PATCH /api/admin/tutores/:id/rechazar - Rechazar tutor y eliminar perfil
 router.post('/tutores/:id/rechazar', adminController.rechazar);
 router.patch('/tutores/:id/rechazar', adminController.rechazar);
+router.post('/solicitudes/:id/rechazar', adminController.rechazar);
+router.patch('/solicitudes/:id/rechazar', adminController.rechazar);
 
-// PATCH /api/admin/tutores/:id/estado - Habilitar o deshabilitar tutor en catálogo
+// PATCH /api/admin/solicitudes/:id/estado
+router.patch('/solicitudes/:id/estado', (req, res, next) => {
+    if (req.body?.estado === 'rechazado') {
+        return adminController.rechazar(req, res, next);
+    }
+    return adminController.aprobar(req, res, next);
+});
+
+// PATCH /api/admin/tutores/:id/estado o /visibilidad - Habilitar o deshabilitar tutor en catálogo
 router.patch('/tutores/:id/estado', adminController.alternarEstado);
+router.patch('/tutores/:id/visibilidad', adminController.alternarEstado);
 
 module.exports = router;

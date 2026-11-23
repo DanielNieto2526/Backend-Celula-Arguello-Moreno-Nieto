@@ -10,43 +10,44 @@ function esMismoTutor(tutorAId, tutorBId, tutorBNombres) {
     if (!tutorAId) return false;
     if (tutorBId && tutorAId === tutorBId) return true;
 
-    // Aliases para Daniel Nieto
+    const normA = String(tutorAId).toLowerCase().trim();
+    const normBId = tutorBId ? String(tutorBId).toLowerCase().trim() : '';
+    const normBNombres = tutorBNombres ? String(tutorBNombres).toLowerCase().trim() : '';
+
+    // Aliases para Daniel Nieto (verificamos nombre completo para no afectar a otros tutores)
     const esDanielA =
-        tutorAId === '2' ||
-        tutorAId === 'tutor-1' ||
-        tutorAId.toLowerCase().includes('nieto') ||
-        tutorAId.toLowerCase().includes('daniel');
+        normA === '2' ||
+        normA === 'tutor-1' ||
+        (normA.includes('daniel') && normA.includes('nieto'));
     const esDanielB =
-        tutorBId === '2' ||
-        tutorBId === 'tutor-1' ||
-        (tutorBNombres &&
-            (tutorBNombres.toLowerCase().includes('daniel') ||
-                tutorBNombres.toLowerCase().includes('nieto')));
+        normBId === '2' ||
+        normBId === 'tutor-1' ||
+        (normBNombres.includes('daniel') && normBNombres.includes('nieto'));
     if (esDanielA && esDanielB) return true;
 
     // Aliases para Juan Cachon
     const esCachonA =
-        tutorAId === 'tutor-jc' ||
-        tutorAId === 'tutor-2' ||
-        tutorAId.toLowerCase().includes('cachon');
+        normA === 'tutor-jc' ||
+        normA === 'tutor-2' ||
+        (normA.includes('juan') && normA.includes('cachon'));
     const esCachonB =
-        tutorBId === 'tutor-jc' ||
-        tutorBId === 'tutor-2' ||
-        (tutorBNombres && tutorBNombres.toLowerCase().includes('cachon'));
+        normBId === 'tutor-jc' ||
+        normBId === 'tutor-2' ||
+        (normBNombres.includes('juan') && normBNombres.includes('cachon'));
     if (esCachonA && esCachonB) return true;
 
     // Aliases para Gabriela Arevalo
     const esArevaloA =
-        tutorAId === 'tutor-ga' ||
-        tutorAId === 'tutor-4' ||
-        tutorAId.toLowerCase().includes('arevalo');
+        normA === 'tutor-ga' ||
+        normA === 'tutor-4' ||
+        (normA.includes('gabriela') && normA.includes('arevalo'));
     const esArevaloB =
-        tutorBId === 'tutor-ga' ||
-        tutorBId === 'tutor-4' ||
-        (tutorBNombres && tutorBNombres.toLowerCase().includes('arevalo'));
+        normBId === 'tutor-ga' ||
+        normBId === 'tutor-4' ||
+        (normBNombres.includes('gabriela') && normBNombres.includes('arevalo'));
     if (esArevaloA && esArevaloB) return true;
 
-    if (tutorBNombres && tutorAId.toLowerCase() === tutorBNombres.toLowerCase().trim()) {
+    if (normBNombres && normA === normBNombres) {
         return true;
     }
 
@@ -61,8 +62,30 @@ async function listarResenas() {
 }
 
 async function obtenerResenasPorTutor(tutorId, tutorNombres) {
+    const idsPermitidos = new Set();
+    if (tutorId) idsPermitidos.add(tutorId.toString().toLowerCase().trim());
+
+    if (estaConectado() && tutorId) {
+        const queryOr = [{ id: tutorId }, { usuarioId: tutorId }];
+        if (/^[0-9a-fA-F]{24}$/.test(tutorId)) queryOr.push({ _id: tutorId });
+        try {
+            const doc = await Tutor.findOne({ $or: queryOr });
+            if (doc) {
+                if (doc.id) idsPermitidos.add(doc.id.toLowerCase().trim());
+                if (doc.usuarioId) idsPermitidos.add(doc.usuarioId.toLowerCase().trim());
+                if (doc._id) idsPermitidos.add(doc._id.toString().toLowerCase().trim());
+            }
+        } catch {
+            // continuar si falla búsqueda
+        }
+    }
+
     const todas = await listarResenas();
-    return todas.filter((r) => esMismoTutor(r.tutorId, tutorId, tutorNombres));
+    return todas.filter((r) => {
+        const rTutorId = (r.tutorId || '').toString().toLowerCase().trim();
+        if (idsPermitidos.has(rTutorId)) return true;
+        return esMismoTutor(r.tutorId, tutorId, tutorNombres);
+    });
 }
 
 async function calcularPromedioTutor(tutorId, tutorNombres) {

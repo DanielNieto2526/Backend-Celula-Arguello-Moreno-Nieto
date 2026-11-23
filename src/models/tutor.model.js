@@ -56,27 +56,46 @@ const tutorSchema = new mongoose.Schema(
             type: String,
             default: 'Presencial'
         },
+        avatarUrl: {
+            type: String,
+            default: ''
+        },
+        fotoPerfil: {
+            type: String,
+            default: ''
+        },
+        telefono: {
+            type: String,
+            default: ''
+        },
         descripcion: {
             type: String,
             default: ''
         },
         precioHora: {
             type: Number,
-            default: 20000
+            default: 0
         },
         precioFormato: {
             type: String,
-            default: '$20.000 x hora'
+            default: 'A convenir'
         },
         materiaPrincipal: {
             type: String,
-            default: 'Cálculo II'
+            default: ''
         },
         estrellas: {
             type: Number,
-            default: 5.0
+            default: 0
         },
-        diasDisponibles: [diaDisponibleSchema],
+        diasDisponibles: {
+            type: [mongoose.Schema.Types.Mixed],
+            default: []
+        },
+        salones: {
+            type: [mongoose.Schema.Types.Mixed],
+            default: []
+        },
         cursos: {
             type: [String],
             default: []
@@ -88,24 +107,24 @@ const tutorSchema = new mongoose.Schema(
         },
         activo: {
             type: Boolean,
-            default: true
+            default: false
         },
         estadoAprobacion: {
             type: String,
             enum: ['pendiente', 'aprobado', 'rechazado'],
-            default: 'aprobado'
+            default: 'pendiente'
         },
         notaMateria: {
             type: Number,
-            default: 4.8
+            default: 0
         },
         promedioAcumulado: {
             type: Number,
-            default: 4.3
+            default: 0
         },
         soporteNotasNombre: {
             type: String,
-            default: 'certificado_oficial.pdf'
+            default: ''
         },
         soporteNotasUrl: {
             type: String,

@@ -7,7 +7,8 @@ const router = Router();
 // POST /api/auth/login
 router.post('/login', validarLogin, authController.login);
 
-// POST /api/auth/registro/estudiante
+// POST /api/auth/registro y /api/auth/registro/estudiante
+router.post('/registro', validarRegistroEstudiante, authController.registrarEstudiante);
 router.post('/registro/estudiante', validarRegistroEstudiante, authController.registrarEstudiante);
 
 module.exports = router;
