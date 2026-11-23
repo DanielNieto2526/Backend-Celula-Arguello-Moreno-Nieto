@@ -250,7 +250,7 @@ async function actualizarDisponibilidad(tutorId, activo) {
         const tutor = await Tutor.findOneAndUpdate(
             { $or: [{ id: tutorId }, { usuarioId: tutorId }, { _id: tutorId.match(/^[0-9a-fA-F]{24}$/) ? tutorId : null }] },
             { activo: Boolean(activo) },
-            { new: true }
+            { returnDocument: 'after' }
         );
         if (!tutor) {
             throw new HttpError(404, `Tutor con id ${tutorId} no encontrado`);
@@ -287,7 +287,7 @@ async function actualizarTutor(tutorId, cambios) {
         let tutor = await Tutor.findOneAndUpdate(
             { $or: queryOr },
             { $set: cambios },
-            { new: true }
+            { returnDocument: 'after' }
         );
 
         if (!tutor) {

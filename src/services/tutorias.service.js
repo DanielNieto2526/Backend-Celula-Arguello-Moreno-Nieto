@@ -415,7 +415,7 @@ async function actualizarLinkReunion(id, linkReunion) {
         const tutoria = await Tutoria.findOneAndUpdate(
             { $or: [{ id: id }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }] },
             { linkReunion },
-            { new: true }
+            { returnDocument: 'after' }
         );
         if (!tutoria) {
             throw new HttpError(404, `Tutoría con id ${id} no encontrada`);
@@ -445,7 +445,7 @@ async function actualizarEstadoTutoria(id, nuevoEstado) {
         const tutoria = await Tutoria.findOneAndUpdate(
             { $or: [{ id: id }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }] },
             update,
-            { new: true }
+            { returnDocument: 'after' }
         );
         if (!tutoria) {
             throw new HttpError(404, `Tutoría con id ${id} no encontrada`);
@@ -482,7 +482,7 @@ async function calificarTutoria(id, calificacion, comentarios) {
         const tutoria = await Tutoria.findOneAndUpdate(
             { $or: [{ id: id }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }] },
             update,
-            { new: true }
+            { returnDocument: 'after' }
         );
         if (!tutoria) {
             throw new HttpError(404, `Tutoría con id ${id} no encontrada`);

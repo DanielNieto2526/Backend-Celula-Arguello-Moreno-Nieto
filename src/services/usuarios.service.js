@@ -80,7 +80,7 @@ async function actualizarUsuario(id, cambios) {
         const usuario = await Usuario.findOneAndUpdate(
             { $or: queryOr },
             { $set: cambios },
-            { new: true, runValidators: true }
+            { returnDocument: 'after', runValidators: true }
         );
         if (!usuario) {
             throw new HttpError(404, `Usuario con id ${id} no encontrado`);
