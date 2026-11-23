@@ -33,6 +33,10 @@ app.get('/api/docs.json', (req, res) => {
 });
 
 // 4. Verificación de salud de la API
+app.get('/', (req, res) => {
+    res.redirect('/api/salud');
+});
+
 app.get('/api/salud', (req, res) => {
     res.json({
         estado: 'ok',
